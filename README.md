@@ -1,7 +1,12 @@
-# Authors : 
-- SENNEVILLE Adhémar (MVA)
+# Cyclic Mixture Permutation Invariant Training
+
+[**Code**](./code/unsupervised-audio-separation.ipynb)
+| [**Presentation**](.CycleMix_Presentation.pptx)
+| [**Report**](.CycleMix_Report.pdf)
+| [**Original Papers**](https://arxiv.org/pdf/2202.03875)
 
 # Work overview
+
 As part of the class of E. BACRY on [Audio signal processing – Time-frequency analysis](https://www.master-mva.com/cours/audio-signal-processing-time-frequency-analysis/), I studied the paper **[MixCycle: Unsupervised Speech Separation via
 Cyclic Mixture Permutation Invariant Training](https://arxiv.org/pdf/2202.03875)** from Bogaziçi University. 
 The paper introduce two unsupervised source separation
@@ -9,7 +14,7 @@ methods, which involve self-supervised training from singlechannel two-source sp
 
 The main contibrution of that repository is an implementation of all *Supervised* and *Unsupervised* technics seen in the paper. And an application to Speech denoizing and all the hypotesis relaxation that goes with that application.
 
-# Delivrable 
+## Delivrable 
 
 - Report 
   - Part 1 describe and explain the paper
@@ -18,16 +23,13 @@ The main contibrution of that repository is an implementation of all *Supervised
 - While not asked, the code is avalable in a single notbook. Be aware that the code is made to work on kaggle and using Weights and Biases API. That allows easy debugging and experimenting.
 
 
-
-# Trainings
+# Implementations (Trainings)
 
 ## Permutation Invariant Training (PIT)
 
 In [PIT](https://arxiv.org/pdf/1607.00325), the separation loss is expressed as:
 
-$
-    L_{\text{PIT}}(s, \hat{s}) = \min_{P} \sum_{m=1}^{2} -\text{SNR}(s_m, [P\hat{s}]_m),
-$
+$L_{\text{PIT}}(s, \hat{s}) = \min_{P} \sum_{m=1}^{2} -\text{SNR}(s_m, [P\hat{s}]_m),$
 
 Here, $P$ is a $2 \times 2$ permutation matrix. In this context, there is no predefined order of the source signals (sources are independent). The loss is computed using the permutation that yields the best match between ground-truth reference sources $s$ and estimated sources $\hat{s}$. There are only two $2 \times 2$ permutation matrix which makes the calculation of the loss function negligible compared to the calculation time of the neural network. The loss function minimization problem is therefore trivial to solve and does not pose a problem during training.
 
@@ -73,19 +75,13 @@ MixCycle is inspired by the same principle as PIT-DM. It uses predicted ground t
 
 Inspired by continuous learning, the network (with freeze parameters) generate new pseudo ground truth data:
 
-$
-\{\tilde{s}_{i1}, \tilde{s}_{i2}\} = f_{\theta}(x_{i}), \quad \{\tilde{s}_{j1}, \tilde{s}_{j2}\} = f_{\theta}(x_{j})
-$
+$\{\tilde{s}_{i1}, \tilde{s}_{i2}\} = f_{\theta}(x_{i}), \quad \{\tilde{s}_{j1}, \tilde{s}_{j2}\} = f_{\theta}(x_{j})$
 
 Now we can do a classic supervised training step like in PIT-DM. For example if we pick the pair $j1-i2$:
 
-$
-\hat{s} = f_{\theta}(\tilde{s}_{j1} + \tilde{s}_{i2}), \quad s = \{\tilde{s}_{j1},\tilde{s}_{i2}\}
-$
+$\hat{s} = f_{\theta}(\tilde{s}_{j1} + \tilde{s}_{i2}), \quad s = \{\tilde{s}_{j1},\tilde{s}_{i2}\}$
 
-$
-    L_{\text{MixCycle}}(s, \hat{s}) = \min_{P} \sum_{m=1}^{2} -\text{SNR}(s_m, [P\hat{s}]_m),
-$
+$L_{\text{MixCycle}}(s, \hat{s}) = \min_{P} \sum_{m=1}^{2} -\text{SNR}(s_m, [P\hat{s}]_m),$
 
 ![avering](https://github.com/AdhemarDeSenneville/MixCycle_MVA/blob/main/fig/S_MixCycle.png?raw=true)
 
@@ -95,9 +91,7 @@ $
 
 Experiments focus on speech denoising, which is a special case of source separation. It implies certain hypotheses compare to the general case. Firstly, we consider that there are only two sources: the voice $v$ and the noise $n$ such that:
 
-$
-    x = \sum_{i=1}^{N} s_i = v + n
-$
+$x = \sum_{i=1}^{N} s_i = v + n$
 
 The noise is not considered to be white or to have any color because it has a structure, it can be the background noise of a train station or of a restaurant. The voice as we know has also a structure. This means that the classical hypothesise of source independence no longueur hold. If the first source is a voice, then the second can only be a noise. However, we can change the equations to our special case, and show that all those training methods still works.
 
@@ -108,6 +102,8 @@ Two significant real-world considerations can challenge its validity. Firstly, t
 
 To investigate this identified limitations, I wanted to try an experiment wherein the audio quality in the dataset was altered to mimic the frequency response of a varying-quality microphone. This was achieved by applying a band-pass filter with variable bandwidth to simulate the effects of inferior recording equipment. The aim was to observe the impact of such alterations on the training process and the final quality of the model.
 
+## Config
+
 | Parameter       | Value      |
 |-----------------|------------|
 | GPU Used        | 1x P100    |
@@ -116,6 +112,9 @@ To investigate this identified limitations, I wanted to try an experiment wherei
 | Learning Rate   | 0.03       |
 | Early Stopping  | 3 epochs   |
 
+# Authors : 
+- de SENNEVILLE Adhémar (MVA)
+  
 # Credit
 
 [MixCycle: Unsupervised Speech Separation via
