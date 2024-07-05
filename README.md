@@ -113,7 +113,7 @@ To investigate this identified limitations, I wanted to try an experiment wherei
 | Early Stopping  | 3 epochs   |
 
 # Authors : 
-- de SENNEVILLE Adhémar (MVA)
+- de SENNEVILLE Adhémar (MVA) (19/20)
   
 # Credit
 
